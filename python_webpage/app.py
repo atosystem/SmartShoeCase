@@ -2,6 +2,12 @@ import RPi.GPIO as GPIO
 from time import sleep
 from RpiMotorLib import RpiMotorLib
 
+import Adafruit_DHT
+sensor=Adafruit_DHT.DHT11
+PIN_temp = 4
+
+import threading
+
 # Hardware settings
 GPIO.setmode(GPIO.BCM)
 
@@ -49,7 +55,7 @@ def initialize_machine():
     # print("Reseting shoes plate position")
 
     # make sure shoes plate is not occupied
-    while(GPIO.input(PIN_shoe_touch)):
+    while(not GPIO.input(PIN_shoe_touch)):
         print("Please take out your shoes!",end='\r')
         sleep(1)
 
@@ -57,11 +63,24 @@ def initialize_machine():
     
 def getTempHumid():
     # TODO
-    machine_status["temperature"] = 24
-    machine_status["humidity"] = 30
-    return (24,30)
+    global machine_status
+    
+    humidity, temperature = Adafruit_DHT.read_retry(sensor, PIN_temp)
+    if humidity is not None and temperature is not None:
+            print('Temperature = {0:0.1f}*C  Humidity = {1:0.1f}%'.format(temperature, humidity))
+    else:
+            print('Failed to get reading. Try again!')
+
+
+    
+    machine_status["temperature"] = temperature
+    machine_status["humidity"] = humidity
+    return (temperature,humidity)
+
 
 def operate_machine():
+    print("Machine operation Starts")
+    global machine_status
     while(True):
         machine_status={
             "status" : "idle",
@@ -76,61 +95,81 @@ def operate_machine():
 
         while(con):
             # wait for shoes
-            while(not GPIO.input(PIN_shoe_touch)):
+            while(GPIO.input(PIN_shoe_touch)):
                 print("Waiting for shoes",end='\r')
                 sleep(1)
             print("Shoes detected")
-            machine_status[status] = "shoes_detected"
+            machine_status["status"] = "shoes_detected"
 
             sleep(2)
-            if GPIO.input(PIN_shoe_touch):
+            if not GPIO.input(PIN_shoe_touch):
                 con = False
             else:
                 con = True
-                machine_status[status] = "idle"
+                machine_status["status"] = "idle"
 
         # move plate to state 1
         # TODO
         print("Moving plate to state 1")
         print("[Done] Moving plate to state 1")
 
-        # detect if need dry
-        machine_status[status] = "pre_check"
-        machine_status[plate_state] = 1
-        print("Prechecking shoes")
-        print("[Done] Prechecking shoes")
 
+        # record atmosphere humidity
+        print("Getting atm humidity")
         getTempHumid()
-
-        need_dry = True
+        atm_humidity = machine_status["humidity"]
+        print("Atm Humidity {}".format(atm_humidity))
 
         # shift down the shell
         # TODO
-        machine_status[status] = "shelldown"
+        machine_status["status"] = "shelldown"
         print("Shell down")
+       
+       
+       
+       
+       
+       
+        # detect if need dry
+        #machine_status["status"] = "pre_check"
+        #machine_status["plate_state"] = 1
+        #print("Prechecking shoes")
+        #print("[Done] Prechecking shoes")
+        
+        
+
+        need_dry = True
+
         GPIO.output(PIN_heat, GPIO.HIGH)
         print("On heat")
-        machine_status[status] = "heating"
+        machine_status["status"] = "heating"
         while(need_dry):
             
-            sleep(7)
+            sleep(5)
             getTempHumid()
+            if machine_status["temperature"] > 60:
+                # overheat
+                GPIO.output(PIN_heat,GPIO.LOW)
+            else:
+                GPIO.output(PIN_heat,GPIO.HIGH)
             
-            need_dry = False
+            if machine_status["humidity"] <= atm_humidity:
+                # done drying process
+                need_dry = False
 
         print("off heat")
         GPIO.output(PIN_heat, GPIO.LOW)
 
         # shift up the shell
         # TODO
-        machine_status[status] = "shell_up"
+        machine_status["status"] = "shell_up"
         print("shell up")
 
 
         # move plate to state 2
         print("moving to state 2")
-        machine_status[status] = "done"
-        machine_status[state] = 2
+        machine_status["status"] = "done"
+        machine_status["state"] = 2
         print("done")
 
         while(not GPIO.input(PIN_shoe_touch)):
@@ -223,7 +262,11 @@ def get_heatoff():
 
 if __name__ == '__main__':
     initialize_machine()
+    t = threading.Thread(target = operate_machine)
+    t.start()
+    print("server start") 
     app.run(host= '0.0.0.0')
-    print("server start")
-    print("start machine")
-    operate_machine()
+    print("server end")
+    t.join()
+    print("process ends")
+    
