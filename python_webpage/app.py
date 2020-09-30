@@ -113,7 +113,7 @@ def operate_machine():
         # move plate to state 1
         # TODO
         print("Moving plate to state 1")
-        motor_horizontal.motor_go(True,"Full",1000,0.006,False,0.95)
+        motor_horizontal.motor_go(True,"Full",1300,0.006,False,0.95)
         print("[Done] Moving plate to state 1")
         machine_status["plate_state"] = 1
 
@@ -127,7 +127,7 @@ def operate_machine():
         # TODO
         machine_status["status"] = "shelldown"
         print("Shell going down")
-        motor_vertical.motor_go(False,"Full",15000,0.0012,False,0.95)
+        motor_vertical.motor_go(False,"Full",13700,0.0012,False,0.95)
         print("[Done] Shell going down")
        
        
@@ -145,10 +145,11 @@ def operate_machine():
 
         need_dry = True
 
-        sleep(5)
+        sleep(10)
         GPIO.output(PIN_heat, GPIO.HIGH)
         print("On heat")
         machine_status["status"] = "heating"
+        first_2 = 0
         while(need_dry):
             
             sleep(5)
@@ -159,9 +160,12 @@ def operate_machine():
             else:
                 GPIO.output(PIN_heat,GPIO.HIGH)
             
-            if machine_status["humidity"] <= atm_humidity + 2:
-                # done drying process
-                need_dry = False
+            if first_2>4 : 
+                if machine_status["humidity"] <= atm_humidity + 2:
+                    # done drying process
+                    need_dry = False
+            
+            first_2 = first_2 + 1
 
         print("off heat")
         GPIO.output(PIN_heat, GPIO.LOW)
@@ -170,7 +174,7 @@ def operate_machine():
         # TODO
         machine_status["status"] = "shell_up"
         print("shell going up")
-        motor_vertical.motor_go(True,"Full",15000,0.004,False,0.95)
+        motor_vertical.motor_go(True,"Full",13700,0.004,False,0.95)
         print("[Done] shell going up")
 
 
@@ -178,7 +182,7 @@ def operate_machine():
         print("moving to state 2")
         machine_status["status"] = "done"
         machine_status["plate_state"] = 2
-        motor_horizontal.motor_go(True,"Full",1000,0.004,False,0.95)
+        motor_horizontal.motor_go(True,"Full",900,0.004,False,0.95)
         print("[Done] moving to state 2")
 
         while(not GPIO.input(PIN_shoe_touch)):
