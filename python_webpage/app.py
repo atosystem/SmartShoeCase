@@ -182,6 +182,10 @@ def get_jquery():
 def get_indexjs():
     return send_file("src/index.js")
 
+@app.route('/index.css')
+def get_indexcss():
+    return send_file("src/index.css")
+
 @app.route('/shoes.png')
 def get_shoes_png():
     return send_file("src/shoes.png")
