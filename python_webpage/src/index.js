@@ -16,7 +16,7 @@ $( document ).ready(function() {
                 document.getElementById("overlay_shoe").style.left = "66.66%"
             }
 
-            if (current_status.shoes == True) {
+            if (current_status.shoes == true) {
                 document.getElementById("overlay_shoe").style.opacity = "100%"
             } else {
                 document.getElementById("overlay_shoe").style.opacity = "30%"
