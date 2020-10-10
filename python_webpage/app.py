@@ -97,9 +97,11 @@ def operate_machine():
             # wait for shoes
             while(GPIO.input(PIN_shoe_touch)):
                 print("Waiting for shoes",end='\r')
+                machine_status["shoes"] = False
                 sleep(1)
             print("Shoes detected")
             machine_status["status"] = "shoes_detected"
+            machine_status["shoes"] = True
 
             sleep(2)
             if not GPIO.input(PIN_shoe_touch):
@@ -180,8 +182,10 @@ def operate_machine():
 
         while(not GPIO.input(PIN_shoe_touch)):
             print("Waiting for shoes to release",end='\r')
+            machine_status["shoes"] = True
             sleep(1)
         print("Shoes release")
+        machine_status["shoes"] = False
         sleep(1)
 
         # move the plate back to state 0

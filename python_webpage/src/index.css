@@ -28,8 +28,9 @@ html, body {
     width : 33.33%;
     height: 100%;
     float: left;
-    background-color: rgba(250, 133, 55, 0.658);
+    background-color: #fa8537a8;
     border-collapse: collapse;
+    text-align: center;
 }
 .rightpane {
     width: 33.33%;
