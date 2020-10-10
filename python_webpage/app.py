@@ -62,7 +62,7 @@ def initialize_machine():
     print("Initialization done")
     
 def getTempHumid():
-    # TODO
+
     global machine_status
     
     humidity, temperature = Adafruit_DHT.read_retry(sensor, PIN_temp)
@@ -111,6 +111,7 @@ def operate_machine():
         # move plate to state 1
         # TODO
         print("Moving plate to state 1")
+        motor_horizontal.motor_go(False,"Full",1000,0.04,False,0.95)
         print("[Done] Moving plate to state 1")
 
 
@@ -123,7 +124,9 @@ def operate_machine():
         # shift down the shell
         # TODO
         machine_status["status"] = "shelldown"
-        print("Shell down")
+        print("Shell going down")
+        motor_vertical.motor_go(False,"Full",15000,0.04,False,0.95)
+        print("[Done] Shell going down")
        
        
        
@@ -163,14 +166,17 @@ def operate_machine():
         # shift up the shell
         # TODO
         machine_status["status"] = "shell_up"
-        print("shell up")
+        print("shell going up")
+        motor_vertical.motor_go(True,"Full",15000,0.04,False,0.95)
+        print("[Done] shell going up")
 
 
         # move plate to state 2
         print("moving to state 2")
         machine_status["status"] = "done"
         machine_status["state"] = 2
-        print("done")
+        motor_horizontal.motor_go(False,"Full",1000,0.04,False,0.95)
+        print("[Done] moving to state 2")
 
         while(not GPIO.input(PIN_shoe_touch)):
             print("Waiting for shoes to release",end='\r')
@@ -180,6 +186,8 @@ def operate_machine():
 
         # move the plate back to state 0
         print("Moving plate back to state 0")
+        motor_horizontal.motor_go(True,"Full",3000,0.04,False,0.95)
+        print("[Done] Moving plate back to state 0")
         sleep(1)
 
 
