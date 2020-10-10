@@ -111,7 +111,7 @@ def operate_machine():
         # move plate to state 1
         # TODO
         print("Moving plate to state 1")
-        motor_horizontal.motor_go(False,"Full",1000,0.004,False,0.95)
+        motor_horizontal.motor_go(False,"Full",1000,0.006,False,0.95)
         print("[Done] Moving plate to state 1")
 
 
