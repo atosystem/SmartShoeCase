@@ -111,7 +111,7 @@ def operate_machine():
         # move plate to state 1
         # TODO
         print("Moving plate to state 1")
-        motor_horizontal.motor_go(False,"Full",1000,0.04,False,0.95)
+        motor_horizontal.motor_go(False,"Full",1000,0.004,False,0.95)
         print("[Done] Moving plate to state 1")
 
 
@@ -125,7 +125,7 @@ def operate_machine():
         # TODO
         machine_status["status"] = "shelldown"
         print("Shell going down")
-        motor_vertical.motor_go(False,"Full",15000,0.04,False,0.95)
+        motor_vertical.motor_go(False,"Full",15000,0.0012,False,0.95)
         print("[Done] Shell going down")
        
        
@@ -167,7 +167,7 @@ def operate_machine():
         # TODO
         machine_status["status"] = "shell_up"
         print("shell going up")
-        motor_vertical.motor_go(True,"Full",15000,0.04,False,0.95)
+        motor_vertical.motor_go(True,"Full",15000,0.004,False,0.95)
         print("[Done] shell going up")
 
 
@@ -175,7 +175,7 @@ def operate_machine():
         print("moving to state 2")
         machine_status["status"] = "done"
         machine_status["state"] = 2
-        motor_horizontal.motor_go(False,"Full",1000,0.04,False,0.95)
+        motor_horizontal.motor_go(False,"Full",1000,0.004,False,0.95)
         print("[Done] moving to state 2")
 
         while(not GPIO.input(PIN_shoe_touch)):
@@ -186,7 +186,7 @@ def operate_machine():
 
         # move the plate back to state 0
         print("Moving plate back to state 0")
-        motor_horizontal.motor_go(True,"Full",3000,0.04,False,0.95)
+        motor_horizontal.motor_go(True,"Full",3000,0.004,False,0.95)
         print("[Done] Moving plate back to state 0")
         sleep(1)
 
