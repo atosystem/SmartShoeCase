@@ -113,7 +113,7 @@ def operate_machine():
         # move plate to state 1
         # TODO
         print("Moving plate to state 1")
-        motor_horizontal.motor_go(True,"Full",1300,0.006,False,0.95)
+        motor_horizontal.motor_go(True,"Full",1200,0.006,False,0.95)
         print("[Done] Moving plate to state 1")
         machine_status["plate_state"] = 1
 
@@ -154,6 +154,7 @@ def operate_machine():
             
             sleep(5)
             getTempHumid()
+            print("atm_humidity={} current humidity = {}".format(atm_humidity,machine_status["humidity"]))
             if machine_status["temperature"] > 60:
                 # overheat
                 GPIO.output(PIN_heat,GPIO.LOW)
@@ -161,7 +162,7 @@ def operate_machine():
                 GPIO.output(PIN_heat,GPIO.HIGH)
             
             if first_2>4 : 
-                if machine_status["humidity"] <= atm_humidity + 2:
+                if machine_status["humidity"] <= atm_humidity + 1:
                     # done drying process
                     need_dry = False
             
@@ -195,8 +196,8 @@ def operate_machine():
 
         # move the plate back to state 0
         print("Moving plate back to state 0")
-        motor_horizontal.motor_go(False,"Full",2000,0.004,False,0.95)
         machine_status["plate_state"] = 0
+        motor_horizontal.motor_go(False,"Full",2000,0.004,False,0.95)
         print("[Done] Moving plate back to state 0")
         sleep(1)
 
