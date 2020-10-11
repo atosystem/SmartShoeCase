@@ -31,6 +31,7 @@ html, body {
     background-color: #fa8537a8;
     border-collapse: collapse;
     text-align: center;
+    font-size: 30px;
 }
 .rightpane {
     width: 33.33%;

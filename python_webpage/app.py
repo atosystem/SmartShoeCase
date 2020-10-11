@@ -196,8 +196,8 @@ def operate_machine():
 
         # move the plate back to state 0
         print("Moving plate back to state 0")
-        machine_status["plate_state"] = 0
         motor_horizontal.motor_go(False,"Full",2000,0.004,False,0.95)
+        machine_status["plate_state"] = 0
         print("[Done] Moving plate back to state 0")
         sleep(1)
 
