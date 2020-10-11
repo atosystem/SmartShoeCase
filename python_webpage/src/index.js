@@ -8,11 +8,11 @@ $( document ).ready(function() {
         $.get("/getStatus", function(current_status){
             console.log(current_status)
 
-            if (current_status.state == 0){
+            if (current_status.plate_state == 0){
                 document.getElementById("overlay_shoe").style.left = "0%"
-            } else if (current_status.state == 1){
+            } else if (current_status.plate_state == 1){
                 document.getElementById("overlay_shoe").style.left = "33.33%"
-            } else if (current_status.state == 2){
+            } else if (current_status.plate_state == 2){
                 document.getElementById("overlay_shoe").style.left = "66.66%"
             }
 
@@ -22,12 +22,12 @@ $( document ).ready(function() {
                 document.getElementById("overlay_shoe").style.opacity = "30%"
             }
 
-            document.getElementById("middlepane").innerText = "Temp:" + String(current_status.temperature) + "\nHumidity:" + String(current_status.humidity)
+            document.getElementById("heating_container").innerText = "Temp:" + String(current_status.temperature) + "\nHumidity:" + String(current_status.humidity)
             
             if (current_status.status === "heating") {
-                document.getElementById("middlepane").style.backgroundColor == "#f86300a8"
+                document.getElementById("heating_container").style.backgroundColor == "#f86300a8"
             } else {
-                document.getElementById("middlepane").style.backgroundColor == "#fa8537a8"
+                document.getElementById("heating_container").style.backgroundColor == "#fa8537a8"
             }
             
             // document.getElementById("div_status").innerHTML = result.pos

@@ -115,7 +115,7 @@ def operate_machine():
         print("Moving plate to state 1")
         motor_horizontal.motor_go(True,"Full",1000,0.006,False,0.95)
         print("[Done] Moving plate to state 1")
-
+        machine_status["plate_state"] = 1
 
         # record atmosphere humidity
         print("Getting atm humidity")
@@ -145,6 +145,7 @@ def operate_machine():
 
         need_dry = True
 
+        sleep(5)
         GPIO.output(PIN_heat, GPIO.HIGH)
         print("On heat")
         machine_status["status"] = "heating"
@@ -176,7 +177,7 @@ def operate_machine():
         # move plate to state 2
         print("moving to state 2")
         machine_status["status"] = "done"
-        machine_status["state"] = 2
+        machine_status["plate_state"] = 2
         motor_horizontal.motor_go(True,"Full",1000,0.004,False,0.95)
         print("[Done] moving to state 2")
 
@@ -191,6 +192,7 @@ def operate_machine():
         # move the plate back to state 0
         print("Moving plate back to state 0")
         motor_horizontal.motor_go(False,"Full",2000,0.004,False,0.95)
+        machine_status["plate_state"] = 0
         print("[Done] Moving plate back to state 0")
         sleep(1)
 
