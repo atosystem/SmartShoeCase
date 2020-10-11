@@ -22,7 +22,7 @@ $( document ).ready(function() {
                 document.getElementById("overlay_shoe").style.opacity = "30%"
             }
 
-            document.getElementById("middlepane").innerHTML = "Temp:" + String(current_status.temperature) + "\nHumidity:" + String(current_status.humidity)
+            document.getElementById("middlepane").innerText = "Temp:" + String(current_status.temperature) + "\nHumidity:" + String(current_status.humidity)
             
             if (current_status.status === "heating") {
                 document.getElementById("middlepane").style.backgroundColor == "#f86300a8"

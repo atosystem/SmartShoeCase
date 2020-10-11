@@ -113,7 +113,7 @@ def operate_machine():
         # move plate to state 1
         # TODO
         print("Moving plate to state 1")
-        motor_horizontal.motor_go(False,"Full",1000,0.006,False,0.95)
+        motor_horizontal.motor_go(True,"Full",1000,0.006,False,0.95)
         print("[Done] Moving plate to state 1")
 
 
@@ -158,7 +158,7 @@ def operate_machine():
             else:
                 GPIO.output(PIN_heat,GPIO.HIGH)
             
-            if machine_status["humidity"] <= atm_humidity:
+            if machine_status["humidity"] <= atm_humidity + 2:
                 # done drying process
                 need_dry = False
 
@@ -177,7 +177,7 @@ def operate_machine():
         print("moving to state 2")
         machine_status["status"] = "done"
         machine_status["state"] = 2
-        motor_horizontal.motor_go(False,"Full",1000,0.004,False,0.95)
+        motor_horizontal.motor_go(True,"Full",1000,0.004,False,0.95)
         print("[Done] moving to state 2")
 
         while(not GPIO.input(PIN_shoe_touch)):
@@ -190,7 +190,7 @@ def operate_machine():
 
         # move the plate back to state 0
         print("Moving plate back to state 0")
-        motor_horizontal.motor_go(True,"Full",2000,0.004,False,0.95)
+        motor_horizontal.motor_go(False,"Full",2000,0.004,False,0.95)
         print("[Done] Moving plate back to state 0")
         sleep(1)
 
